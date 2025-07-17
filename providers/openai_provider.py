@@ -91,24 +91,6 @@ class OpenAIModelProvider(OpenAICompatibleProvider):
             description="Latest reasoning model (200K context) - Optimized for shorter contexts, rapid reasoning",
             aliases=["mini", "o4mini", "o4-mini"],
         ),
-        "o4-mini-deep-research": ModelCapabilities(
-            provider=ProviderType.OPENAI,
-            model_name="o4-mini-deep-research-2025-06-26",
-            friendly_name="OpenAI (O4-mini-deep-research)",
-            context_window=200_000,  # 200K tokens
-            max_output_tokens=100_000,  # Confirmed: 100K max output tokens
-            supports_extended_thinking=False,
-            supports_system_prompts=True,
-            supports_streaming=True,  # Confirmed: Supported
-            supports_function_calling=True,  # Research model with function calling
-            supports_json_mode=True,  # Structured outputs supported
-            supports_images=True,  # Image input supported
-            max_image_size_mb=20.0,  # Standard OpenAI limit
-            supports_temperature=False,  # O4 models don't accept temperature parameter
-            temperature_constraint=create_temperature_constraint("fixed"),
-            description="Faster, more affordable deep research model (200K context) - Specialized for complex, multi-step research tasks with web search and data synthesis via MCP connectors",
-            aliases=["o4-deep", "o4-mini-deep"],
-        ),
         "gpt-4.1-2025-04-14": ModelCapabilities(
             provider=ProviderType.OPENAI,
             model_name="gpt-4.1-2025-04-14",
