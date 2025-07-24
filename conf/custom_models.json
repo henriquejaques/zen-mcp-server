@@ -309,6 +309,7 @@
       "supports_images": false,
       "max_image_size_mb": 0.0,
       "supports_temperature": true,
+      "is_custom": false,
       "description": "Kimi K2 by Moonshot AI via OpenRouter - Advanced agentic model with tool use and reasoning (text-only)"
     },
     {
@@ -322,6 +323,7 @@
       "supports_images": false,
       "max_image_size_mb": 0.0,
       "supports_temperature": true,
+      "is_custom": false,
       "description": "Kimi K2 (Free) by Moonshot AI via OpenRouter - Advanced agentic model with tool use and reasoning (text-only)"
     }
   ]
