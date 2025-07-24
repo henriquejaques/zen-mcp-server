@@ -51,6 +51,23 @@
   },
   "models": [
     {
+      "model_name": "gpt-4.1",
+      "aliases": [
+        "my-gpt4.1"
+      ],
+      "context_window": 1047576,
+      "max_output_tokens": 32768,
+      "supports_extended_thinking": false,
+      "supports_json_mode": true,
+      "supports_function_calling": true,
+      "supports_images": true,
+      "max_image_size_mb": 10.0,
+      "supports_temperature": true,
+      "temperature_constraint": "range",
+      "is_custom": true,
+      "description": "Flagship GPT model for complex tasks (1M+ context) - Advanced reasoning with multimodal capabilities, web search, and tool use"
+    },
+    {
       "model_name": "anthropic/claude-opus-4",
       "aliases": ["opus", "claude-opus", "claude4-opus", "claude-4-opus"],
       "context_window": 200000,
