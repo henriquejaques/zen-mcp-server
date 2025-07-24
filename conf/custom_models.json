@@ -50,22 +50,37 @@
     }
   },
   "models": [
-    {
-      "model_name": "local-gpt-4.1",
-      "aliases": [
-        "local"
-      ],
-      "context_window": 1047576,
-      "max_output_tokens": 32768,
-      "supports_extended_thinking": false,
-      "supports_json_mode": true,
-      "supports_function_calling": true,
+    "gpt-4o-local": {
+      "provider": "custom",
+      "model_name": "gpt-4o",
+      "context_window": 128000,
+      "max_output_tokens": 4096,
       "supports_images": true,
-      "max_image_size_mb": 10.0,
-      "supports_temperature": true,
-      "temperature_constraint": "range",
-      "is_custom": true,
-      "description": "Flagship GPT model for complex tasks (1M+ context) - Advanced reasoning with multimodal capabilities, web search, and tool use"
+      "supports_function_calling": true
+    },
+    "gpt-4.1-local": {
+      "provider": "custom",
+      "model_name": "gpt-4.1",
+      "context_window": 128000,
+      "max_output_tokens": 4096,
+      "supports_images": true,
+      "supports_function_calling": true
+    },
+    "o3-mini-local": {
+      "provider": "custom",
+      "model_name": "o3-mini",
+      "context_window": 128000,
+      "max_output_tokens": 4096,
+      "supports_images": false,
+      "supports_function_calling": true
+    },
+    "claude-3.5-sonnet-local": {
+      "provider": "custom",
+      "model_name": "claude-3.5-sonnet",
+      "context_window": 200000,
+      "max_output_tokens": 4096,
+      "supports_images": true,
+      "supports_function_calling": true
     },
     {
       "model_name": "anthropic/claude-opus-4",
