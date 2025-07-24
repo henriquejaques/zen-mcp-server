@@ -296,41 +296,22 @@ class CustomProvider(OpenAICompatibleProvider):
         configs = {}
 
         if self._registry:
-            # DEBUG: Check what the registry contains
-            all_models = self._registry.list_models()
-            all_aliases = self._registry.list_aliases()
-            print(f"DEBUG [CustomProvider]: Registry has {len(all_models)} models: {all_models}")
-            print(f"DEBUG [CustomProvider]: Registry has {len(all_aliases)} aliases: {all_aliases}")
-            
             # Get all models from registry
-            for model_name in all_models:
-                print(f"DEBUG [CustomProvider]: Processing model '{model_name}'")
+            for model_name in self._registry.list_models():
                 # Only include custom models that this provider validates
-                validates = self.validate_model_name(model_name)
-                print(f"DEBUG [CustomProvider]: Model '{model_name}' validates: {validates}")
-                if validates:
+                if self.validate_model_name(model_name):
                     config = self._registry.resolve(model_name)
-                    print(f"DEBUG [CustomProvider]: Config for '{model_name}': {config}")
                     if config and config.is_custom:
-                        print(f"DEBUG [CustomProvider]: Adding custom model '{model_name}' to configs")
                         # Use ModelCapabilities directly from registry
                         configs[model_name] = config
-                    else:
-                        print(f"DEBUG [CustomProvider]: Model '{model_name}' not custom, skipping")
                         
             # Also check aliases
-            for alias in all_aliases:
-                print(f"DEBUG [CustomProvider]: Processing alias '{alias}'")
-                validates = self.validate_model_name(alias)
-                print(f"DEBUG [CustomProvider]: Alias '{alias}' validates: {validates}")
-                if validates:
+            for alias in self._registry.list_aliases():
+                if self.validate_model_name(alias):
                     config = self._registry.resolve(alias)
-                    print(f"DEBUG [CustomProvider]: Config for alias '{alias}': {config}")
                     if config and config.is_custom:
-                        print(f"DEBUG [CustomProvider]: Adding custom alias '{alias}' to configs")
                         configs[alias] = config
 
-        print(f"DEBUG [CustomProvider]: Final configs: {list(configs.keys())}")
         return configs
 
     def get_all_model_aliases(self) -> dict[str, list[str]]:

@@ -38,6 +38,8 @@ class ModelProviderRegistry:
         """
         instance = cls()
         instance._providers[provider_type] = provider_class
+        logging.debug(f"REGISTRY: Registered provider {provider_type} with class {provider_class}")
+        logging.debug(f"REGISTRY: Current providers: {list(instance._providers.keys())}")
 
     @classmethod
     def get_provider(
@@ -60,6 +62,7 @@ class ModelProviderRegistry:
 
         # Check if provider class is registered
         if provider_type not in instance._providers:
+            logging.debug(f"REGISTRY: Provider {provider_type} not found in registered providers: {list(instance._providers.keys())}")
             return None
 
         # Get API key from environment
@@ -73,15 +76,19 @@ class ModelProviderRegistry:
             # Check if it's a factory function (callable but not a class)
             if callable(provider_class) and not isinstance(provider_class, type):
                 # Factory function - call it with api_key parameter
+                logging.debug(f"REGISTRY: CustomProvider using factory function with api_key={api_key}")
                 provider = provider_class(api_key=api_key)
             else:
                 # Regular class - need to handle URL requirement
                 custom_url = os.getenv("CUSTOM_API_URL", "")
+                logging.debug(f"REGISTRY: CustomProvider class initialization - URL={custom_url}, api_key={api_key}")
                 if not custom_url:
                     if api_key:  # Key is set but URL is missing
                         logging.warning(
                             "CUSTOM_API_KEY set but CUSTOM_API_URL missing – skipping Custom provider"
                         )
+                    else:
+                        logging.debug("REGISTRY: No CUSTOM_API_URL set - skipping Custom provider")
                     return None
                 # Use empty string as API key for custom providers that don't need auth (e.g., Ollama)
                 # This allows the provider to be created even without CUSTOM_API_KEY being set

@@ -240,24 +240,47 @@ class ListModelsTool(BaseTool):
             output_lines.append("**Description**: Local models via Ollama, vLLM, LM Studio, etc.")
 
             try:
-                registry = OpenRouterModelRegistry()
-                custom_models = []
+                # Get Custom provider from registry to get properly validated models
+                from providers.base import ProviderType
+                from providers.registry import ModelProviderRegistry
 
-                for alias in registry.list_aliases():
-                    config = registry.resolve(alias)
-                    if config and config.is_custom:
-                        custom_models.append((alias, config))
-
-                if custom_models:
-                    output_lines.append("\n**Custom Models**:")
-                    for alias, config in custom_models:
-                        context_str = f"{config.context_window // 1000}K" if config.context_window else "?"
-                        output_lines.append(f"- `{alias}` → `{config.model_name}` ({context_str} context)")
-                        if config.description:
-                            output_lines.append(f"  - {config.description}")
+                provider = ModelProviderRegistry.get_provider(ProviderType.CUSTOM)
+                logger.debug(f"CustomProvider from registry: {provider}")
+                
+                if provider:
+                    # Get models from the CustomProvider which properly validates them
+                    custom_configs = provider.get_model_configurations()
+                    logger.debug(f"CustomProvider configs: {len(custom_configs)} items")
+                    
+                    if custom_configs:
+                        output_lines.append("\n**Custom Models**:")
+                        
+                        # Group by model name to avoid showing duplicate aliases
+                        seen_models = set()
+                        for alias, config in custom_configs.items():
+                            if config.model_name not in seen_models:
+                                seen_models.add(config.model_name)
+                                context_str = f"{config.context_window // 1000}K" if config.context_window else "?"
+                                output_lines.append(f"- `{config.model_name}` ({context_str} context)")
+                                if config.description:
+                                    output_lines.append(f"  - {config.description}")
+                        
+                        # Show aliases
+                        output_lines.append("\n**Aliases**:")
+                        for alias, config in sorted(custom_configs.items()):
+                            if alias != config.model_name:  # Only show actual aliases, not model names
+                                output_lines.append(f"- `{alias}` → `{config.model_name}`")
+                    else:
+                        output_lines.append("**Debug**: CustomProvider found but no configs returned")
+                        logger.debug("CustomProvider found but get_model_configurations() returned empty")
+                else:
+                    output_lines.append("**Error**: Could not load Custom provider")
+                    logger.debug("CustomProvider not found in registry")
 
             except Exception as e:
                 output_lines.append(f"**Error loading custom models**: {str(e)}")
+                import traceback
+                logger.error(f"Error in listmodels custom section: {traceback.format_exc()}")
         else:
             output_lines.append("**Status**: Not configured (set CUSTOM_API_URL)")
             output_lines.append("**Example**: CUSTOM_API_URL=http://localhost:11434 (for Ollama)")
