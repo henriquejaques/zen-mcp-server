@@ -27,7 +27,9 @@ class ModelProviderRegistry:
         return cls._instance
 
     @classmethod
-    def register_provider(cls, provider_type: ProviderType, provider_class: type[ModelProvider]) -> None:
+    def register_provider(
+        cls, provider_type: ProviderType, provider_class: type[ModelProvider]
+    ) -> None:
         """Register a new provider class.
 
         Args:
@@ -38,7 +40,9 @@ class ModelProviderRegistry:
         instance._providers[provider_type] = provider_class
 
     @classmethod
-    def get_provider(cls, provider_type: ProviderType, force_new: bool = False) -> Optional[ModelProvider]:
+    def get_provider(
+        cls, provider_type: ProviderType, force_new: bool = False
+    ) -> Optional[ModelProvider]:
         """Get an initialized provider instance.
 
         Args:
@@ -75,7 +79,9 @@ class ModelProviderRegistry:
                 custom_url = os.getenv("CUSTOM_API_URL", "")
                 if not custom_url:
                     if api_key:  # Key is set but URL is missing
-                        logging.warning("CUSTOM_API_KEY set but CUSTOM_API_URL missing – skipping Custom provider")
+                        logging.warning(
+                            "CUSTOM_API_KEY set but CUSTOM_API_URL missing – skipping Custom provider"
+                        )
                     return None
                 # Use empty string as API key for custom providers that don't need auth (e.g., Ollama)
                 # This allows the provider to be created even without CUSTOM_API_KEY being set
@@ -124,7 +130,9 @@ class ModelProviderRegistry:
         # Check providers in priority order
         instance = cls()
         logging.debug(f"Registry instance: {instance}")
-        logging.debug(f"Available providers in registry: {list(instance._providers.keys())}")
+        logging.debug(
+            f"Available providers in registry: {list(instance._providers.keys())}"
+        )
 
         for provider_type in PROVIDER_PRIORITY_ORDER:
             if provider_type in instance._providers:
@@ -135,7 +143,9 @@ class ModelProviderRegistry:
                     logging.debug(f"{provider_type} validates model {model_name}")
                     return provider
                 else:
-                    logging.debug(f"{provider_type} does not validate model {model_name}")
+                    logging.debug(
+                        f"{provider_type} does not validate model {model_name}"
+                    )
             else:
                 logging.debug(f"{provider_type} not found in registry")
 
@@ -149,7 +159,9 @@ class ModelProviderRegistry:
         return list(instance._providers.keys())
 
     @classmethod
-    def get_available_models(cls, respect_restrictions: bool = True) -> dict[str, ProviderType]:
+    def get_available_models(
+        cls, respect_restrictions: bool = True
+    ) -> dict[str, ProviderType]:
         """Get mapping of all available models to their providers.
 
         Args:
@@ -161,7 +173,9 @@ class ModelProviderRegistry:
         # Import here to avoid circular imports
         from utils.model_restrictions import get_restriction_service
 
-        restriction_service = get_restriction_service() if respect_restrictions else None
+        restriction_service = (
+            get_restriction_service() if respect_restrictions else None
+        )
         models: dict[str, ProviderType] = {}
         instance = cls()
 
@@ -171,9 +185,13 @@ class ModelProviderRegistry:
                 continue
 
             try:
-                available = provider.list_models(respect_restrictions=respect_restrictions)
+                available = provider.list_models(
+                    respect_restrictions=respect_restrictions
+                )
             except NotImplementedError:
-                logging.warning("Provider %s does not implement list_models", provider_type)
+                logging.warning(
+                    "Provider %s does not implement list_models", provider_type
+                )
                 continue
 
             for model_name in available:
@@ -199,7 +217,9 @@ class ModelProviderRegistry:
         return models
 
     @classmethod
-    def get_available_model_names(cls, provider_type: Optional[ProviderType] = None) -> list[str]:
+    def get_available_model_names(
+        cls, provider_type: Optional[ProviderType] = None
+    ) -> list[str]:
         """Get list of available model names, optionally filtered by provider.
 
         This respects model restrictions automatically.
@@ -214,7 +234,11 @@ class ModelProviderRegistry:
 
         if provider_type:
             # Filter by specific provider
-            return [name for name, ptype in available_models.items() if ptype == provider_type]
+            return [
+                name
+                for name, ptype in available_models.items()
+                if ptype == provider_type
+            ]
         else:
             # Return all available models
             return list(available_models.keys())
@@ -245,7 +269,9 @@ class ModelProviderRegistry:
         return os.getenv(env_var)
 
     @classmethod
-    def get_preferred_fallback_model(cls, tool_category: Optional["ToolModelCategory"] = None) -> str:
+    def get_preferred_fallback_model(
+        cls, tool_category: Optional["ToolModelCategory"] = None
+    ) -> str:
         """Get the preferred fallback model based on available API keys and tool category.
 
         This method checks which providers have valid API keys and returns
@@ -266,11 +292,19 @@ class ModelProviderRegistry:
         available_models = cls.get_available_models(respect_restrictions=True)
 
         # Group by provider
-        openai_models = [m for m, p in available_models.items() if p == ProviderType.OPENAI]
-        gemini_models = [m for m, p in available_models.items() if p == ProviderType.GOOGLE]
+        openai_models = [
+            m for m, p in available_models.items() if p == ProviderType.OPENAI
+        ]
+        gemini_models = [
+            m for m, p in available_models.items() if p == ProviderType.GOOGLE
+        ]
         xai_models = [m for m, p in available_models.items() if p == ProviderType.XAI]
-        openrouter_models = [m for m, p in available_models.items() if p == ProviderType.OPENROUTER]
-        custom_models = [m for m, p in available_models.items() if p == ProviderType.CUSTOM]
+        openrouter_models = [
+            m for m, p in available_models.items() if p == ProviderType.OPENROUTER
+        ]
+        custom_models = [
+            m for m, p in available_models.items() if p == ProviderType.CUSTOM
+        ]
 
         openai_available = bool(openai_models)
         gemini_available = bool(gemini_models)
@@ -389,7 +423,9 @@ class ModelProviderRegistry:
             try:
                 from providers.custom import CustomProvider
 
-                if isinstance(custom_provider, CustomProvider) and hasattr(custom_provider, "model_registry"):
+                if isinstance(custom_provider, CustomProvider) and hasattr(
+                    custom_provider, "model_registry"
+                ):
                     for model_name, config in custom_provider.model_registry.items():
                         if config.get("supports_extended_thinking", False):
                             return model_name
@@ -416,7 +452,9 @@ class ModelProviderRegistry:
                     # Log the error for debugging purposes but continue searching
                     import logging
 
-                    logging.warning(f"Model validation for '{model}' on OpenRouter failed: {e}")
+                    logging.warning(
+                        f"Model validation for '{model}' on OpenRouter failed: {e}"
+                    )
                     continue
 
         return None
