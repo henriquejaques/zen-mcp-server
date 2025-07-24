@@ -51,9 +51,9 @@
   },
   "models": [
     {
-      "model_name": "gpt-4.1",
+      "model_name": "local-gpt-4.1",
       "aliases": [
-        "my-gpt4.1"
+        "local"
       ],
       "context_window": 1047576,
       "max_output_tokens": 32768,
