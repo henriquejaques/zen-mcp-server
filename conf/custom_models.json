@@ -50,37 +50,62 @@
     }
   },
   "models": [
-    "gpt-4o-local": {
-      "provider": "custom",
+    {
       "model_name": "gpt-4o",
+      "aliases": ["gpt-4o-local", "local-gpt4o"],
       "context_window": 128000,
       "max_output_tokens": 4096,
+      "supports_extended_thinking": false,
+      "supports_json_mode": true,
+      "supports_function_calling": true,
       "supports_images": true,
-      "supports_function_calling": true
+      "max_image_size_mb": 20.0,
+      "supports_temperature": true,
+      "is_custom": true,
+      "description": "GPT-4o via localhost:4141 custom endpoint"
     },
-    "gpt-4.1-local": {
-      "provider": "custom",
+    {
       "model_name": "gpt-4.1",
+      "aliases": ["gpt-4.1-local", "local-gpt41"],
       "context_window": 128000,
       "max_output_tokens": 4096,
+      "supports_extended_thinking": false,
+      "supports_json_mode": true,
+      "supports_function_calling": true,
       "supports_images": true,
-      "supports_function_calling": true
+      "max_image_size_mb": 20.0,
+      "supports_temperature": true,
+      "is_custom": true,
+      "description": "GPT-4.1 via localhost:4141 custom endpoint"
     },
-    "o3-mini-local": {
-      "provider": "custom",
+    {
       "model_name": "o3-mini",
+      "aliases": ["o3-mini-local", "local-o3mini"],
       "context_window": 128000,
       "max_output_tokens": 4096,
+      "supports_extended_thinking": false,
+      "supports_json_mode": true,
+      "supports_function_calling": true,
       "supports_images": false,
-      "supports_function_calling": true
+      "max_image_size_mb": 0.0,
+      "supports_temperature": false,
+      "temperature_constraint": "fixed",
+      "is_custom": true,
+      "description": "o3-mini via localhost:4141 custom endpoint"
     },
-    "claude-3.5-sonnet-local": {
-      "provider": "custom",
+    {
       "model_name": "claude-3.5-sonnet",
+      "aliases": ["claude-3.5-sonnet-local", "local-claude"],
       "context_window": 200000,
       "max_output_tokens": 4096,
+      "supports_extended_thinking": false,
+      "supports_json_mode": false,
+      "supports_function_calling": false,
       "supports_images": true,
-      "supports_function_calling": true
+      "max_image_size_mb": 5.0,
+      "supports_temperature": true,
+      "is_custom": true,
+      "description": "Claude 3.5 Sonnet via localhost:4141 custom endpoint"
     },
     {
       "model_name": "anthropic/claude-opus-4",
@@ -120,7 +145,7 @@
     },
     {
       "model_name": "google/gemini-2.5-pro",
-      "aliases": ["pro","gemini-pro", "gemini", "pro-openrouter"],
+      "aliases": ["pro", "gemini-pro", "gemini", "pro-openrouter"],
       "context_window": 1048576,
       "max_output_tokens": 65536,
       "supports_extended_thinking": false,
@@ -132,7 +157,7 @@
     },
     {
       "model_name": "google/gemini-2.5-flash",
-      "aliases": ["flash","gemini-flash", "flash-openrouter", "flash-2.5"],
+      "aliases": ["flash", "gemini-flash", "flash-openrouter", "flash-2.5"],
       "context_window": 1048576,
       "max_output_tokens": 65536,
       "supports_extended_thinking": false,
