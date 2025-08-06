@@ -109,6 +109,24 @@
       "description": "Claude 4 Opus - Most capable Claude model with vision"
     },
     {
+      "model_name": "claude-4.1-opus",
+      "aliases": [
+        "local-4.1-opus",
+        "claude-opus41-local",
+        "claude4.1-opus-local",
+        "claude-4.1-opus-local"
+      ],
+      "context_window": 200000,
+      "max_output_tokens": 320000,
+      "supports_extended_thinking": true,
+      "supports_json_mode": false,
+      "supports_function_calling": false,
+      "supports_images": true,
+      "max_image_size_mb": 5.0,
+      "is_custom": true,
+      "description": "Claude 4.1 Opus - Most capable Claude model with vision"
+    },
+    {
       "model_name": "claude-4-sonnet",
       "aliases": [
         "local-sonnet",
